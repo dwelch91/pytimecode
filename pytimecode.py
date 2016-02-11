@@ -14,7 +14,6 @@ Copyright Joshua Banton"""
 
 
 # heavily modified from original 0.1.0 version in PyPi to fix defects
-from math import floor
 
 
 class PyTimeCode(object):
