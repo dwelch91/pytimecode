@@ -1,8 +1,6 @@
 # pytimecode
-Module for manipulating SMPTE timecodes.
 
-
-Python module for manipulating SMPTE timecode.
+## Python module for manipulating SMPTE timecode.
 
 Supports 60, 59.94, 50, 30, 29.97, 25, 24, 23.98 frame rates in drop and non-drop where applicable, and milliseconds.
 
