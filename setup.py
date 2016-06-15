@@ -6,5 +6,5 @@ setup(name='pytimecode',
       author='Joshua Banton',
       author_email='',
       url='https://github.com/dwelch91/pytimecode/',
-      packages=['pytimecode'],
+      py_modules=['pytimecode'],
      )
