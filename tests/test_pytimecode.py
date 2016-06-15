@@ -509,6 +509,29 @@ class TestPyTimeCode(unittest.TestCase):
         self.debug('yp2', tc.frames, tc2.frames, tc3.frames, tc.make_timecode())
         self.assertEquals('04:20:13;20',  tc3.make_timecode())
 
+    def test_case_1(self):
+        start = pytimecode.PyTimeCode('29.97', "01:00:00;00")
+        self.assertEquals(start.frames, 107892)
+
+        end = pytimecode.PyTimeCode('29.97', "01:01:00;02")
+        self.assertEquals(end.frames, 109692)
+
+        diff = end - start
+        self.assertEquals(diff.frames, 1800)  # 1800
+        self.assertEquals(diff.make_timecode(), "00:01:00;02")   # 00:00:59;28
+
+        end.add_frames(10)
+        self.assertEquals(end.make_timecode(), "01:01:00;12")
+        self.assertEquals(end.frames, 109702)  # 109700?
+
+        start.sub_frames(10)
+        self.assertEquals(start.make_timecode(), "00:59:59;20")
+        self.assertEquals(start.frames, 107882)
+
+        diff2 = end - start
+        self.assertEquals(diff2.frames, 1820)
+        self.assertEquals(diff2.make_timecode(), "00:01:00;22")
+
     def test_exceptions(self):
         e = None
         try:
@@ -586,3 +609,4 @@ class TestPyTimeCode(unittest.TestCase):
             d = tc / tc2
         except (TypeError, pytimecode.PyTimeCodeError) as e:
             self.assertEquals("unsupported operand type(s) for /: 'PyTimeCode' and 'str'", e.__str__())
+
