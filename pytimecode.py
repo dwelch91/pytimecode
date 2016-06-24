@@ -44,6 +44,17 @@ class PyTimeCode(object):
         """sets timecode to argument 'timecode'"""
         self.hrs, self.mins, self.secs, self.frs, self.drop_frame = self.parse_timecode(timecode)
 
+    def total_seconds(self):
+        drop_fix = 0
+
+        if self.drop_frame:
+            drop_fix = 2 * (self.mins % 10)
+
+            if self.framerate == '59.94':
+                drop_fix *= 2
+
+        return (self.hrs * 3600) + (self.mins * 60) + self.secs + (self.frames - drop_fix) / self.int_framerate
+
     def tc_to_frames(self):
         """converts corrent timecode to frames"""
         total_mins = 60 * self.hrs + self.mins
@@ -72,7 +83,8 @@ class PyTimeCode(object):
 
     def calc_drop_frames(self):
         # 'formula' taken from http://www.andrewduncan.ws/Timecodes/Timecodes.html
-        if self.framerate not in ('29.97', '59.94'):
+        #if self.framerate not in ('29.97', '59.94'):
+        if not self.drop_frame:
             return 0
 
         drop_frames_per_event = 2
@@ -128,17 +140,16 @@ class PyTimeCode(object):
         min_str = self.__set_time_str(self.mins)
         sec_str = self.__set_time_str(self.secs)
         frame_str = self.__set_time_str(self.frs)
-        timecode_str = "%s:%s:%s%s%s" % (hr_str, min_str, sec_str, ';' if self.drop_frame else ':', frame_str)
+        drop_char = ':'
+        if self.framerate == 'ms':
+            drop_char = '.'
+        elif self.drop_frame:
+            drop_char = ';'
+        timecode_str = "%s:%s:%s%s%s" % (hr_str, min_str, sec_str, drop_char, frame_str)
         return timecode_str
 
     def __set_time_str(self, time):
         return str(int(time)).zfill(2)
-        # return "{0:02f}".format(int(time))
-        # if len(str(time)) > 1:
-        #     time_str = str(time)
-        # else:
-        #     time_str = "0%s" % time
-        # return time_str
 
     def __iter__(self):
         return self
@@ -194,7 +205,7 @@ class PyTimeCode(object):
             added_frames = self.frames + other
         else:
             raise PyTimeCodeError('Type ' + str(type(other)) + ' not supported for arithmetic.')
-        newtc = PyTimeCode(self.framerate, start_timecode=None, frames=added_frames, drop_frame=self.drop_frame)
+        newtc = PyTimeCode(self.framerate, frames=added_frames, drop_frame=self.drop_frame)
         return newtc
 
     def __sub__(self, other):
@@ -205,7 +216,7 @@ class PyTimeCode(object):
             subtracted_frames = self.frames - other
         else:
             raise PyTimeCodeError('Type ' + str(type(other)) + ' not supported for arithmetic.')
-        newtc = PyTimeCode(self.framerate, start_timecode=None, frames=subtracted_frames, drop_frame=self.drop_frame)
+        newtc = PyTimeCode(self.framerate, frames=subtracted_frames, drop_frame=self.drop_frame)
         return newtc
 
     def __mul__(self, other):
@@ -216,7 +227,7 @@ class PyTimeCode(object):
             mult_frames = self.frames * other
         else:
             raise PyTimeCodeError('Type ' + str(type(other)) + ' not supported for arithmetic.')
-        newtc = PyTimeCode(self.framerate, start_timecode=None, frames=mult_frames, drop_frame=self.drop_frame)
+        newtc = PyTimeCode(self.framerate, frames=mult_frames, drop_frame=self.drop_frame)
         return newtc
 
     def __div__(self, other):
@@ -227,12 +238,11 @@ class PyTimeCode(object):
             div_frames = self.frames // other
         else:
             raise PyTimeCodeError('Type ' + str(type(other)) + ' not supported for arithmetic.')
-        newtc = PyTimeCode(self.framerate, start_timecode=None, frames=div_frames, drop_frame=self.drop_frame)
+        newtc = PyTimeCode(self.framerate, frames=div_frames, drop_frame=self.drop_frame)
         return newtc
 
     def __repr__(self):
         return self.make_timecode()
-
 
 class PyTimeCodeError(Exception):
     pass

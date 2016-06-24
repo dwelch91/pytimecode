@@ -532,6 +532,21 @@ class TestPyTimeCode(unittest.TestCase):
         self.assertEquals(diff2.frames, 1820)
         self.assertEquals(diff2.make_timecode(), "00:01:00;22")
 
+    # def test_case_2(self):
+    #     pass
+    #     tc = pytimecode.PyTimeCode('ms', '00:00:01:500')
+    #     self.assertEquals(tc.frames, 1500)
+    #     tc.convert_fps('29.97', True)
+    #     #self.assertEquals(tc.make_timecode(), "00:00:01;15")
+    #     self.assertEquals(tc.frames, 1500)
+    #     self.assertEquals(tc.make_timecode(), "00:03:25;06")
+    #
+    #
+    #     tc2 = pytimecode.PyTimeCode('29.97', '00:01:01;01')
+    #     tc2.convert_fps('60', False)
+    #     # self.assertEquals(tc2.make_timecode(), '00:01:01:02')
+    #     self.assertEquals(tc2.make_timecode(), '00:00:30:29')
+
     def test_exceptions(self):
         e = None
         try:
