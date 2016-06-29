@@ -22,6 +22,7 @@ class TestPyTimeCode(unittest.TestCase):
         timeobj = pytimecode.PyTimeCode('60', '00:00:00:00')
         timeobj = pytimecode.PyTimeCode('59.94', '00:00:00:00')
         timeobj = pytimecode.PyTimeCode('ms', '03:36:09:230')
+        timeobj = pytimecode.PyTimeCode('ms', '03:36:09.230')
         timeobj = pytimecode.PyTimeCode('24', start_timecode=None, frames=12000)
 
     def test_repr_overload(self):
@@ -38,7 +39,7 @@ class TestPyTimeCode(unittest.TestCase):
         timeobj = pytimecode.PyTimeCode('59.94', '00:00:20:00')
         self.assertEquals('00:00:20:00', timeobj.__repr__())
         timeobj = pytimecode.PyTimeCode('ms', '00:00:00:900')
-        self.assertEquals('00:00:00:900', timeobj.__repr__())
+        self.assertEquals('00:00:00.900', timeobj.__repr__())
         timeobj = pytimecode.PyTimeCode('24', start_timecode=None, frames=49)
         self.debug(timeobj.int_framerate)
         self.assertEquals('00:00:02:01', timeobj.__repr__())
@@ -256,7 +257,7 @@ class TestPyTimeCode(unittest.TestCase):
         for x in range(60):
             t = tc.next()
             assert t
-        self.assertEquals('03:36:09:290', t)
+        self.assertEquals('03:36:09.290', t)
         self.assertEquals(12969290, tc.frames)
 
         tc = pytimecode.PyTimeCode('24', start_timecode=None, frames=12000)
@@ -355,9 +356,9 @@ class TestPyTimeCode(unittest.TestCase):
         d = tc + tc2
         f = tc + 719
         self.debug(tc.frames, tc2.frames, d.frames)
-        self.assertEquals("04:42:18:460", d.make_timecode())
+        self.assertEquals("04:42:18.460", d.make_timecode())
         self.assertEquals(16938460, d.frames)
-        self.assertEquals("03:36:09:949", f.make_timecode())
+        self.assertEquals("03:36:09.949", f.make_timecode())
         self.assertEquals(12969949, f.frames)
 
         tc = pytimecode.PyTimeCode('24', start_timecode=None, frames=12000)
@@ -551,49 +552,49 @@ class TestPyTimeCode(unittest.TestCase):
         e = None
         try:
             tc = pytimecode.PyTimeCode('24', '01:20:30:303')
-        except pytimecode.PyTimeCodeError as e:
+        except ValueError as e:
             self.debug(type(e), e)
             self.assertEquals('Timecode string parsing error. 01:20:30:303', e.__str__())
 
         try:
             tc = pytimecode.PyTimeCode('23.98', '01:20:30:303')
-        except pytimecode.PyTimeCodeError as e:
+        except ValueError as e:
             self.debug(type(e), e)
             self.assertEquals('Timecode string parsing error. 01:20:30:303', e.__str__())
 
         try:
             tc = pytimecode.PyTimeCode('29.97', '01:20:30:303')
-        except pytimecode.PyTimeCodeError as e:
+        except ValueError as e:
             self.debug(type(e), e)
             self.assertEquals('Timecode string parsing error. 01:20:30:303', e.__str__())
 
         try:
             tc = pytimecode.PyTimeCode('30', '01:20:30:303')
-        except pytimecode.PyTimeCodeError as e:
+        except ValueError as e:
             self.debug(type(e), e)
             self.assertEquals('Timecode string parsing error. 01:20:30:303', e.__str__())
 
         try:
             tc = pytimecode.PyTimeCode('60', '01:20:30:303')
-        except pytimecode.PyTimeCodeError as e:
+        except ValueError as e:
             self.debug(type(e), e)
             self.assertEquals('Timecode string parsing error. 01:20:30:303', e.__str__())
 
         try:
             tc = pytimecode.PyTimeCode('59.94', '01:20:30:303')
-        except pytimecode.PyTimeCodeError as e:
+        except ValueError as e:
             self.debug(type(e), e)
             self.assertEquals('Timecode string parsing error. 01:20:30:303', e.__str__())
 
         try:
             tc = pytimecode.PyTimeCode('ms', '01:20:30:3039')
-        except pytimecode.PyTimeCodeError as e:
+        except ValueError as e:
             self.debug(type(e), e)
             self.assertEquals('Timecode string parsing error. 01:20:30:3039', e.__str__())
 
         try:
             tc = pytimecode.PyTimeCode('60', '01:20:30;30')
-        except pytimecode.PyTimeCodeError as e:
+        except ValueError as e:
             self.debug(type(e), e)
             self.assertEquals('Drop frame with 60fps not supported, only 29.97 & 59.94.', e.__str__())
 
@@ -601,27 +602,27 @@ class TestPyTimeCode(unittest.TestCase):
         tc2 = 'bum'
         try:
             d = tc * tc2
-        except pytimecode.PyTimeCodeError as e:
+        except ValueError as e:
             self.assertEquals("Type <class 'str'> not supported for arithmetic.", e.__str__())
 
         tc = pytimecode.PyTimeCode('30', '00:00:09:23')
         tc2 = 'bum'
         try:
             d = tc + tc2
-        except pytimecode.PyTimeCodeError as e:
+        except ValueError as e:
             self.assertEquals("Type <class 'str'> not supported for arithmetic.", e.__str__())
 
         tc = pytimecode.PyTimeCode('24', '00:00:09:23')
         tc2 = 'bum'
         try:
             d = tc - tc2
-        except pytimecode.PyTimeCodeError as e:
+        except ValueError as e:
             self.assertEquals("Type <class 'str'> not supported for arithmetic.", e.__str__())
 
         tc = pytimecode.PyTimeCode('ms', '00:00:09:237')
         tc2 = 'bum'
         try:
             d = tc / tc2
-        except (TypeError, pytimecode.PyTimeCodeError) as e:
+        except (TypeError, ValueError) as e:
             self.assertEquals("unsupported operand type(s) for /: 'PyTimeCode' and 'str'", e.__str__())
 
