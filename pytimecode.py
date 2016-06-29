@@ -22,7 +22,7 @@ class PyTimeCode(object):
         self.framerate = framerate
         self.int_framerate = self.set_int_framerate()
         self.drop_frame = drop_frame
-        if start_timecode and drop_frame and start_timecode[8] != ';':
+        if start_timecode and drop_frame and len(start_timecode) > 8 and start_timecode[8] != ';':
             raise ValueError("If drop_frame is True and a start timecode is specified, the tc must use drop frame format.")
         self.iter_return = iter_return
         self.hrs = None
