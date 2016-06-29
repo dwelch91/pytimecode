@@ -554,43 +554,43 @@ class TestPyTimeCode(unittest.TestCase):
             tc = pytimecode.PyTimeCode('24', '01:20:30:303')
         except ValueError as e:
             self.debug(type(e), e)
-            self.assertEquals('Timecode string parsing error. 01:20:30:303', e.__str__())
+            self.assertEquals("Timecode string parsing error: '01:20:30:303'", e.__str__())
 
         try:
             tc = pytimecode.PyTimeCode('23.98', '01:20:30:303')
         except ValueError as e:
             self.debug(type(e), e)
-            self.assertEquals('Timecode string parsing error. 01:20:30:303', e.__str__())
+            self.assertEquals("Timecode string parsing error: '01:20:30:303'", e.__str__())
 
         try:
             tc = pytimecode.PyTimeCode('29.97', '01:20:30:303')
         except ValueError as e:
             self.debug(type(e), e)
-            self.assertEquals('Timecode string parsing error. 01:20:30:303', e.__str__())
+            self.assertEquals("Timecode string parsing error: '01:20:30:303'", e.__str__())
 
         try:
             tc = pytimecode.PyTimeCode('30', '01:20:30:303')
         except ValueError as e:
             self.debug(type(e), e)
-            self.assertEquals('Timecode string parsing error. 01:20:30:303', e.__str__())
+            self.assertEquals("Timecode string parsing error: '01:20:30:303'", e.__str__())
 
         try:
             tc = pytimecode.PyTimeCode('60', '01:20:30:303')
         except ValueError as e:
             self.debug(type(e), e)
-            self.assertEquals('Timecode string parsing error. 01:20:30:303', e.__str__())
+            self.assertEquals("Timecode string parsing error: '01:20:30:303'", e.__str__())
 
         try:
             tc = pytimecode.PyTimeCode('59.94', '01:20:30:303')
         except ValueError as e:
             self.debug(type(e), e)
-            self.assertEquals('Timecode string parsing error. 01:20:30:303', e.__str__())
+            self.assertEquals("Timecode string parsing error: '01:20:30:303'", e.__str__())
 
         try:
             tc = pytimecode.PyTimeCode('ms', '01:20:30:3039')
         except ValueError as e:
             self.debug(type(e), e)
-            self.assertEquals('Timecode string parsing error. 01:20:30:3039', e.__str__())
+            self.assertEquals("Timecode string parsing error: '01:20:30:3039'", e.__str__())
 
         try:
             tc = pytimecode.PyTimeCode('60', '01:20:30;30')

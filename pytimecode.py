@@ -13,7 +13,7 @@ Notes: *There is a 24 hour SMPTE Timecode limit, so if your time exceeds that li
 Copyright Joshua Banton"""
 
 
-# heavily modified from original 0.1.0 version in PyPi to fix defects
+# heavily modified from original 0.1.0 version in PyPi to fix defects and modify behavior for use in asteval
 
 
 class PyTimeCode(object):
@@ -83,7 +83,6 @@ class PyTimeCode(object):
 
     def calc_drop_frames(self):
         # 'formula' taken from http://www.andrewduncan.ws/Timecodes/Timecodes.html
-        #if self.framerate not in ('29.97', '59.94'):
         if not self.drop_frame:
             return 0
 
@@ -127,7 +126,7 @@ class PyTimeCode(object):
             frs = int(timecode[9:12])
             drop = False
         else:
-            raise ValueError('Timecode string parsing error. ' + timecode)
+            raise ValueError('Timecode string parsing error: {!r}'.format(timecode))
 
         hrs = int(timecode[0:2])
         mins = int(timecode[3:5])
@@ -168,7 +167,7 @@ class PyTimeCode(object):
         elif self.framerate == "29.97" or self.framerate == "59.94":
             return True
         else:
-            raise ValueError('Drop frame with ' + self.framerate + 'fps not supported, only 29.97 & 59.94.')
+            raise ValueError('Drop frame with {}fps not supported, only 29.97 & 59.94.'.format(self.framerate))
 
     def __return_item__(self):
         if self.iter_return == 'tc':
@@ -204,7 +203,7 @@ class PyTimeCode(object):
         elif type(other) == int:
             added_frames = self.frames + other
         else:
-            raise ValueError('Type ' + str(type(other)) + ' not supported for arithmetic.')
+            raise ValueError('Type {} not supported for arithmetic.'.format(type(other)))
         newtc = PyTimeCode(self.framerate, frames=added_frames, drop_frame=self.drop_frame)
         return newtc
 
@@ -215,7 +214,7 @@ class PyTimeCode(object):
         elif type(other) == int:
             subtracted_frames = self.frames - other
         else:
-            raise ValueError('Type ' + str(type(other)) + ' not supported for arithmetic.')
+            raise ValueError('Type {} not supported for arithmetic.'.format(type(other)))
         newtc = PyTimeCode(self.framerate, frames=subtracted_frames, drop_frame=self.drop_frame)
         return newtc
 
@@ -226,7 +225,7 @@ class PyTimeCode(object):
         elif type(other) == int:
             mult_frames = self.frames * other
         else:
-            raise ValueError('Type ' + str(type(other)) + ' not supported for arithmetic.')
+            raise ValueError('Type {} not supported for arithmetic.'.format(type(other)))
         newtc = PyTimeCode(self.framerate, frames=mult_frames, drop_frame=self.drop_frame)
         return newtc
 
@@ -237,7 +236,7 @@ class PyTimeCode(object):
         elif type(other) == int:
             div_frames = self.frames // other
         else:
-            raise ValueError('Type ' + str(type(other)) + ' not supported for arithmetic.')
+            raise ValueError('Type {} not supported for arithmetic.'.format(type(other)))
         newtc = PyTimeCode(self.framerate, frames=div_frames, drop_frame=self.drop_frame)
         return newtc
 
