@@ -655,3 +655,14 @@ class TestPyTimeCode(unittest.TestCase):
         self.assertTrue(tc1 < tc2)
         self.assertTrue(tc1 <= tc2)
         self.assertTrue(tc1 != tc2)
+
+        tc3 = pytimecode.PyTimeCode('25', '00:00:00:00')
+        self.assertTrue(tc1 == tc3)
+
+        tc3 = pytimecode.PyTimeCode('25', '00:00:00:01')
+        tc4 = pytimecode.PyTimeCode('24', '00:00:00:01')
+        self.assertTrue(tc3 < tc4)
+
+        tc3 = pytimecode.PyTimeCode('25', '00:00:01:00')
+        tc4 = pytimecode.PyTimeCode('24', '00:00:01:00')
+        self.assertTrue(tc3 == tc4)
