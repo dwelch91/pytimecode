@@ -15,7 +15,10 @@ Copyright Joshua Banton"""
 
 # heavily modified from original 0.1.0 version in PyPi to fix defects and modify behavior for use in asteval
 
+from functools import total_ordering
 
+
+@total_ordering
 class PyTimeCode(object):
     def __init__(self, framerate, start_timecode=None, frames=None, drop_frame=False, iter_return="tc"):
         """frame rate can be string '60', '59.94', '50', '30', '29.97', '25', '24', '23.98', or 'ms'"""
@@ -54,6 +57,12 @@ class PyTimeCode(object):
                 drop_fix *= 2
 
         return (self.hrs * 3600) + (self.mins * 60) + self.secs + (self.frames - drop_fix) / self.int_framerate
+
+    def __lt__(self, other):
+        return self.total_seconds() < other.total_seconds()
+
+    def __eq__(self, other):
+        return self.total_seconds() == other.total_seconds()
 
     def tc_to_frames(self):
         """converts corrent timecode to frames"""

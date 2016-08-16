@@ -626,3 +626,32 @@ class TestPyTimeCode(unittest.TestCase):
         except (TypeError, ValueError) as e:
             self.assertEquals("unsupported operand type(s) for /: 'PyTimeCode' and 'str'", e.__str__())
 
+        tc1 = pytimecode.PyTimeCode('24', '00:00:00:00')
+        tc2 = pytimecode.PyTimeCode('24', '00:00:00:00')
+        self.assertTrue(tc1 == tc2)
+        self.assertFalse(tc1 > tc2)
+        self.assertTrue(tc1 >= tc2)
+        self.assertFalse(tc1 < tc2)
+        self.assertTrue(tc1 <= tc2)
+
+        tc2 = pytimecode.PyTimeCode('24', '00:00:00:01')
+        self.assertTrue(tc2 > tc1)
+        self.assertTrue(tc1 < tc2)
+        self.assertTrue(tc1 != tc2)
+
+        tc2 = pytimecode.PyTimeCode('24', '01:00:00:00')
+        self.assertTrue(tc2 > tc1)
+        self.assertTrue(tc1 < tc2)
+        self.assertTrue(tc1 != tc2)
+
+        tc2 = pytimecode.PyTimeCode('24', '00:01:00:00')
+        self.assertTrue(tc2 > tc1)
+        self.assertTrue(tc1 < tc2)
+        self.assertTrue(tc1 != tc2)
+
+        tc2 = pytimecode.PyTimeCode('24', '00:00:01:00')
+        self.assertTrue(tc2 > tc1)
+        self.assertTrue(tc2 >= tc1)
+        self.assertTrue(tc1 < tc2)
+        self.assertTrue(tc1 <= tc2)
+        self.assertTrue(tc1 != tc2)
