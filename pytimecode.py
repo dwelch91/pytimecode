@@ -56,7 +56,7 @@ class PyTimeCode(object):
             if self.framerate == '59.94':
                 drop_fix *= 2
 
-        return (self.hrs * 3600) + (self.mins * 60) + self.secs + (self.frames - drop_fix) / self.int_framerate
+        return (self.hrs * 3600) + (self.mins * 60) + self.secs + (self.frs - drop_fix) / self.int_framerate
 
     def __lt__(self, other):
         return self.total_seconds() < other.total_seconds()
